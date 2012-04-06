@@ -33,12 +33,12 @@
 
     <application-components>
         <component>
-            <implementation-class>com.leapingfrogs.idea.plugins.alternate.action.AlternateApplicationComponent</implementation-class>
+            <implementation-class>altn8.AlternateApplicationComponent</implementation-class>
         </component>
     </application-components>
 
     <actions>
-        <action id="alternate_file" class="com.leapingfrogs.idea.plugins.alternate.action.AlternateFileAction"
+        <action id="alternate_file" class="altn8.AlternateFileAction"
                 text="Alternate File"
                 description="Switch the editor to the alternate file">
             <keyboard-shortcut keymap="$default" first-keystroke="alt 8"/>
