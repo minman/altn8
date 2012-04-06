@@ -10,7 +10,7 @@
         ]]>
     </description>
     <version>1.3-SNAPSHOT</version>
-    <vendor url="http://code.google.com/p/altn8/" logo="altn8.png">Minas Manthos</vendor>
+    <vendor url="http://code.google.com/p/altn8">Minas Manthos</vendor>
     <!--IntelliJ IDEA 7.0 final - 7200-7499-->
     <idea-version since-build="7200"/>
 

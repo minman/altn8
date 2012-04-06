@@ -12,7 +12,6 @@ public class AlternateApplicationComponent extends AlternateConfiguration implem
 
     private static final String COMPONENTNAME = "AlternateApplicationComponent";
     private static final String DISPLAYNAME = "AltN8";
-    private static final String ICONFILE = "altn8.png";
 
     public void initComponent() {
     }
@@ -29,7 +28,7 @@ public class AlternateApplicationComponent extends AlternateConfiguration implem
     }
 
     public Icon getIcon() {
-        return new ImageIcon(AlternateApplicationComponent.class.getClassLoader().getResource(ICONFILE));
+        return null;
     }
 
     public String getHelpTopic() {
