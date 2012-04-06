@@ -1,0 +1,48 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin>
+    <id>Alt n 8</id> <!--unique identifier of the plugin, dont change-->
+
+    <name>AltN8</name>
+    <description><![CDATA[
+        Open Alternate File: i.e. jump from source to test file, maven resource, html file, properties file, etc... configured using regular expressions.<br>
+        <br>
+        Thanks to LeapingFrogs.com for the original plugin.
+        ]]>
+    </description>
+    <version>1.2.0</version>
+    <vendor url="http://code.google.com/p/altn8/" logo="altn8.png">Minas Manthos</vendor>
+    <!--IntelliJ IDEA 7.0 final - 7200-7499-->
+    <idea-version since-build="7200"/>
+
+    <change-notes><![CDATA[
+        <u>1.2.0</u><br>
+        + new fabulous and powerful generic regex configuration<br>
+        + grouping of files in popup<br>
+        <u>1.1.0</u><br>
+        + rewrite of configuration form<br>
+        + new button to copy regex<br>
+        + perform syntax checks when editing regex<br>
+        <u>1.0.1</u><br>
+        + some 'product identity' things<br>
+        <u>1.0.0</u><br>
+        + show full paths in popup<br>
+        + show hint if no file found<br>
+        <u>0.2.1</u><br>
+        + release of LeapingFrogs.com<br>
+    ]]></change-notes>
+
+    <application-components>
+        <component>
+            <implementation-class>com.leapingfrogs.idea.plugins.alternate.action.AlternateApplicationComponent</implementation-class>
+        </component>
+    </application-components>
+
+    <actions>
+        <action id="alternate_file" class="com.leapingfrogs.idea.plugins.alternate.action.AlternateFileAction"
+                text="Alternate File"
+                description="Switch the editor to the alternate file">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt 8"/>
+            <add-to-group group-id="EditorPopupMenu.GoTo" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
