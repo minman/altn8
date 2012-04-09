@@ -95,5 +95,10 @@ public class AlternateConfiguration {
         genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("xml"));
         genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("dtd"));
         genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("xsd"));
+        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("rb"));
+        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("py"));
+        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("php"));
+        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("pl"));
+        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("pm"));
     }
 }
