@@ -44,17 +44,17 @@ class AlternateFreeRegexPanel implements DataInterface {
     }
 
     public void pullDataFrom(AlternateConfiguration configuration) {
-        activeCheckBox.setSelected(configuration.isFreeRegexActive());
+        activeCheckBox.setSelected(configuration.freeRegexActive);
         itemDataPanel.pullDataFrom(configuration);
     }
 
     public void pushDataTo(AlternateConfiguration configuration) {
-        configuration.setFreeRegexActive(activeCheckBox.isSelected());
+        configuration.freeRegexActive = activeCheckBox.isSelected();
         itemDataPanel.pushDataTo(configuration);
     }
 
     public boolean isModified(AlternateConfiguration configuration) {
-        return activeCheckBox.isSelected() != configuration.isFreeRegexActive() ||
+        return activeCheckBox.isSelected() != configuration.freeRegexActive ||
                 itemDataPanel.isModified(configuration);
     }
 
@@ -96,7 +96,7 @@ class AlternateFreeRegexPanel implements DataInterface {
          */
         @Override
         protected void showEditDialog(@NotNull String title, @Nullable AlternateFreeRegexItem currentItem, @NotNull Runnable<AlternateFreeRegexItem> runnable) {
-            AlternateFreeRegexItemDialog.showDialog(title, currentItem == null ? new AlternateFreeRegexItem("", "") : currentItem, runnable);
+            AlternateFreeRegexItemDialog.showDialog(title, currentItem == null ? AlternateFreeRegexItem.of("", "") : currentItem, runnable);
         }
 
         /**
@@ -105,7 +105,7 @@ class AlternateFreeRegexPanel implements DataInterface {
         @Override
         @NotNull
         protected List<AlternateFreeRegexItem> getConfigurationItem(@NotNull AlternateConfiguration configuration) {
-            return configuration.getFreeRegexItems();
+            return configuration.freeRegexItems;
         }
 
         private static final String[] TABLECOLUMNS = new String[]{"Match Expression", "Replace Expression"};
@@ -126,9 +126,9 @@ class AlternateFreeRegexPanel implements DataInterface {
                     AlternateFreeRegexItem item = getItems().get(rowIndex);
                     switch (columnIndex) {
                         case TABLECOLUMN_MATCHEXPRESSION:
-                            return item.getMatchExpression();
+                            return item.matchExpression;
                         case TABLECOLUMN_REPLACEEXPRESSION:
-                            return item.getReplaceExpression();
+                            return item.replaceExpression;
                     }
                     throw new IllegalArgumentException("Unknown column index: " + columnIndex);
                 }

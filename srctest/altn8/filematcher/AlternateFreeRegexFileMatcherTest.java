@@ -49,16 +49,16 @@ public class AlternateFreeRegexFileMatcherTest extends AlternateFileMatcherTest 
     public void testMatches() throws Exception {
         // prepare test
         AlternateConfiguration configuration = new AlternateConfiguration();
-        configuration.setFreeRegexActive(true);
-        configuration.setGenericRegexActive(false);
-        configuration.getFreeRegexItems().clear();
+        configuration.freeRegexActive = true;
+        configuration.genericRegexActive = false;
+        configuration.freeRegexItems.clear();
         // java file finds Test and properties
-        configuration.getFreeRegexItems().add(new AlternateFreeRegexItem("^(.*?)\\.java$", "$1Test.java"));
-        configuration.getFreeRegexItems().add(new AlternateFreeRegexItem("^(.*?)\\.java$", "$1.properties"));
+        configuration.freeRegexItems.add(AlternateFreeRegexItem.of("^(.*?)\\.java$", "$1Test.java"));
+        configuration.freeRegexItems.add(AlternateFreeRegexItem.of("^(.*?)\\.java$", "$1.properties"));
         // Test find only java
-        configuration.getFreeRegexItems().add(new AlternateFreeRegexItem("^(.*?)Test\\.java", "$1.java"));
+        configuration.freeRegexItems.add(AlternateFreeRegexItem.of("^(.*?)Test\\.java", "$1.java"));
         // properties find only java
-        configuration.getFreeRegexItems().add(new AlternateFreeRegexItem("^(.*?)\\.properties", "$1.java"));
+        configuration.freeRegexItems.add(AlternateFreeRegexItem.of("^(.*?)\\.properties", "$1.java"));
 
         // make our tests
 

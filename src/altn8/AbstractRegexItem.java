@@ -22,25 +22,31 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class AbstractRegexItem {
     @Nullable
-    protected String errorText;
-
-    /**
-     *
-     */
-    protected abstract void updateErrorText();
+    private String errorText;
+    private boolean validated = false;
 
     /**
      *
      */
     @Nullable
-    public String getErrorText() {
+    protected abstract String validate();
+
+    /**
+     *
+     */
+    @Nullable
+    public final String getErrorText() {
+        if (!validated) {
+            errorText = validate();
+            validated = true;
+        }
         return errorText;
     }
 
     /**
      *
      */
-    public boolean hasError() {
-        return errorText != null;
+    public final boolean hasError() {
+        return getErrorText() != null;
     }
 }

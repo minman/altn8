@@ -38,14 +38,14 @@ public class AlternateFreeRegexFileMatcher implements AlternateFileMatcher {
     public AlternateFreeRegexFileMatcher(String currentFilename, AlternateConfiguration configuration) {
         // put all same matchExpressions in a map having a List with replaceExpressions
         Map<String, List<String>> map = new HashMap<String, List<String>>(); // <matchExpression, List<replaceExpression>>
-        for (AlternateFreeRegexItem item : configuration.getFreeRegexItems()) {
+        for (AlternateFreeRegexItem item : configuration.freeRegexItems) {
             if (!item.hasError()) {
-                List<String> replaceItems = map.get(item.getMatchExpression());
+                List<String> replaceItems = map.get(item.matchExpression);
                 if (replaceItems == null) {
                     replaceItems = new ArrayList<String>();
-                    map.put(item.getMatchExpression(), replaceItems);
+                    map.put(item.matchExpression, replaceItems);
                 }
-                replaceItems.add(item.getReplaceExpression());
+                replaceItems.add(item.replaceExpression);
             }
         }
         // go thru all matchExpressions

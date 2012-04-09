@@ -15,7 +15,6 @@
  */
 package altn8;
 
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,53 +26,26 @@ import java.util.regex.PatternSyntaxException;
  */
 public final class AlternateFreeRegexItem extends AbstractRegexItem {
     @NotNull
-    private final String matchExpression;
+    public String matchExpression;
     @NotNull
-    private final String replaceExpression;
-
-    private static final String XMLELEMENT_FREEREGEXITEM = "mapping"; // 'mapping' is the old name for FreeRegexItem -> should stay for compitibility
-    private static final String XMLATTRIBUTE_MATCHEXPRESSION = "matchExpression";
-    private static final String XMLATTRIBUTE_REPLACEEXPRESSION = "replaceExpression";
+    public String replaceExpression;
 
     /**
      *
      */
-    public AlternateFreeRegexItem(@NotNull String matchExpression, @NotNull String replaceExpression) {
-        this.matchExpression = matchExpression;
-        this.replaceExpression = replaceExpression;
-        updateErrorText();
+    public static AlternateFreeRegexItem of(@NotNull String matchExpression, @NotNull String replaceExpression) {
+        AlternateFreeRegexItem item = new AlternateFreeRegexItem();
+        item.matchExpression = matchExpression;
+        item.replaceExpression = replaceExpression;
+        return item;
     }
 
     /**
-     *
+     * @return
      */
-    public AlternateFreeRegexItem(@NotNull Element element) {
-        this.matchExpression = element.getAttributeValue(XMLATTRIBUTE_MATCHEXPRESSION, "");
-        this.replaceExpression = element.getAttributeValue(XMLATTRIBUTE_REPLACEEXPRESSION, "");
-        updateErrorText();
-    }
-
-    /**
-     *
-     */
-    protected void updateErrorText() {
-        errorText = getErrorText(matchExpression, replaceExpression);
-    }
-
-    /**
-     *
-     */
-    @NotNull
-    public String getMatchExpression() {
-        return matchExpression;
-    }
-
-    /**
-     *
-     */
-    @NotNull
-    public String getReplaceExpression() {
-        return replaceExpression;
+    @Override
+    protected String validate() {
+        return validate(matchExpression, replaceExpression);
     }
 
     /**
@@ -111,23 +83,14 @@ public final class AlternateFreeRegexItem extends AbstractRegexItem {
     }
 
     /**
-     * @return this item as JDOM-Element
-     */
-    @NotNull
-    Element asJDomElement() {
-        Element element = new Element(XMLELEMENT_FREEREGEXITEM);
-        element.setAttribute(XMLATTRIBUTE_MATCHEXPRESSION, getMatchExpression());
-        element.setAttribute(XMLATTRIBUTE_REPLACEEXPRESSION, getReplaceExpression());
-        return element;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
-        return "AlternateFreeRegexItem{" + XMLATTRIBUTE_MATCHEXPRESSION + "='" + matchExpression + '\'' + ", " +
-                XMLATTRIBUTE_REPLACEEXPRESSION + "='" + replaceExpression + '\'' + '}';
+        return "AlternateFreeRegexItem{" +
+                "matchExpression='" + matchExpression + '\'' +
+                ", replaceExpression='" + replaceExpression + '\'' +
+                '}';
     }
 
     /**
@@ -136,7 +99,7 @@ public final class AlternateFreeRegexItem extends AbstractRegexItem {
      * @return ErrorText or null if ok
      */
     @Nullable
-    public static String getErrorText(@NotNull String matchExpression, @NotNull String replaceExpression) {
+    public static String validate(@NotNull String matchExpression, @NotNull String replaceExpression) {
         // matchExpression
         Pattern matchPattern = null;
         try {

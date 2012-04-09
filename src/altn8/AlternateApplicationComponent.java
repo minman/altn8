@@ -17,13 +17,19 @@ package altn8;
 
 import altn8.ui.AlternateConfigurationPanel;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.util.xmlb.XmlSerializerUtil;
 
 import javax.swing.*;
 
-public class AlternateApplicationComponent extends AlternateConfiguration implements ApplicationComponent, Configurable {
+@State(name = "AlternateApplicationComponent", storages = {@Storage(id = "altn8", file = "$APP_CONFIG$/altn8.xml")})
+public class AlternateApplicationComponent implements ApplicationComponent, Configurable, PersistentStateComponent<AlternateConfiguration> {
     private AlternateConfigurationPanel dataInterface;
+    private AlternateConfiguration alternateConfiguration = new AlternateConfiguration();
 
     private static final String COMPONENTNAME = "AlternateApplicationComponent";
     private static final String DISPLAYNAME = "AltN8";
@@ -58,22 +64,30 @@ public class AlternateApplicationComponent extends AlternateConfiguration implem
     }
 
     public boolean isModified() {
-        return dataInterface != null && dataInterface.isModified(this);
+        return dataInterface != null && dataInterface.isModified(alternateConfiguration);
     }
 
     public void apply() throws ConfigurationException {
         if (dataInterface != null) {
-            dataInterface.pushDataTo(this);
+            dataInterface.pushDataTo(alternateConfiguration);
         }
     }
 
     public void reset() {
         if (dataInterface != null) {
-            dataInterface.pullDataFrom(this);
+            dataInterface.pullDataFrom(alternateConfiguration);
         }
     }
 
     public void disposeUIResources() {
         dataInterface = null;
+    }
+
+    public AlternateConfiguration getState() {
+        return alternateConfiguration;
+    }
+
+    public void loadState(AlternateConfiguration state) {
+        XmlSerializerUtil.copyBean(state, alternateConfiguration);
     }
 }

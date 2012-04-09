@@ -43,7 +43,7 @@ final class AlternateFreeRegexItemDialog extends DialogWrapper {
         setTitle("Free RegEx: " + title);
         init();
         // matchExpressionTextField
-        matchExpressionTextField.setText(item.getMatchExpression());
+        matchExpressionTextField.setText(item.matchExpression);
         matchExpressionTextField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 matchExpressionTextField.select(0, matchExpressionTextField.getText().length());
@@ -56,7 +56,7 @@ final class AlternateFreeRegexItemDialog extends DialogWrapper {
             }
         });
         // replaceExpressionTextField
-        replaceExpressionTextField.setText(item.getReplaceExpression());
+        replaceExpressionTextField.setText(item.replaceExpression);
         replaceExpressionTextField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 replaceExpressionTextField.select(0, replaceExpressionTextField.getText().length());
@@ -78,7 +78,7 @@ final class AlternateFreeRegexItemDialog extends DialogWrapper {
         // OK enabled if we have input...
         setOKActionEnabled(matchExpression.length() > 0 && replaceExpression.length() > 0);
         // Show errors (Error ist shown in html, so we convert our Messege to html)
-        setErrorText(AlternateUtils.toHTML(AlternateFreeRegexItem.getErrorText(matchExpression, replaceExpression)));
+        setErrorText(AlternateUtils.toHTML(AlternateFreeRegexItem.validate(matchExpression, replaceExpression)));
     }
 
     /**
@@ -94,7 +94,7 @@ final class AlternateFreeRegexItemDialog extends DialogWrapper {
      */
     @NotNull
     private AlternateFreeRegexItem getItem() {
-        return new AlternateFreeRegexItem(matchExpressionTextField.getText(), replaceExpressionTextField.getText());
+        return AlternateFreeRegexItem.of(matchExpressionTextField.getText(), replaceExpressionTextField.getText());
     }
 
     /**

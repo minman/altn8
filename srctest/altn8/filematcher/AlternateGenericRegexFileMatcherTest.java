@@ -78,8 +78,8 @@ public class AlternateGenericRegexFileMatcherTest extends AlternateFileMatcherTe
     public void testMatches() throws Exception {
         // prepare test
         AlternateConfiguration configuration = new AlternateConfiguration();
-        configuration.setFreeRegexActive(false);
-        configuration.setGenericRegexActive(true);
+        configuration.freeRegexActive = false;
+        configuration.genericRegexActive = true;
 
         // make our tests
 

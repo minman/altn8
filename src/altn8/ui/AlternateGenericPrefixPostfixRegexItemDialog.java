@@ -34,6 +34,7 @@ final class AlternateGenericPrefixPostfixRegexItemDialog extends DialogWrapper {
     private AlternateGenericPrefixPostfixRegexItem.GenericType type;
     private JTextField expressionTextField;
     private JCheckBox checkBoxGrouping;
+    private JTextArea descriptionTextArea;
 
     /**
      * @param title
@@ -41,10 +42,10 @@ final class AlternateGenericPrefixPostfixRegexItemDialog extends DialogWrapper {
      */
     private AlternateGenericPrefixPostfixRegexItemDialog(@NotNull String title, @NotNull AlternateGenericPrefixPostfixRegexItem item) {
         super(true);
-        setTitle("Generic " + item.getType().getText() + " RegEx: " + title);
+        setTitle("Generic " + item.type.getText() + " RegEx: " + title);
         init();
         // expressionTextField
-        expressionTextField.setText(item.getExpression());
+        expressionTextField.setText(item.expression);
         expressionTextField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 expressionTextField.select(0, expressionTextField.getText().length());
@@ -57,9 +58,10 @@ final class AlternateGenericPrefixPostfixRegexItemDialog extends DialogWrapper {
             }
         });
         // 
-        type = item.getType(); // store, needed for create new item
+        type = item.type; // store, needed for create new item
         //
-        checkBoxGrouping.setSelected(item.isGrouping());
+        checkBoxGrouping.setSelected(item.grouping);
+        descriptionTextArea.setText(item.description);
         changed();
     }
 
@@ -68,7 +70,7 @@ final class AlternateGenericPrefixPostfixRegexItemDialog extends DialogWrapper {
         // OK enabled if we have input...
         setOKActionEnabled(expression.length() > 0);
         // Show errors (Error ist shown in html, so we convert our Messege to html)
-        setErrorText(AlternateUtils.toHTML(AlternateGenericPrefixPostfixRegexItem.getErrorText(expression)));
+        setErrorText(AlternateUtils.toHTML(AlternateGenericPrefixPostfixRegexItem.validate(expression)));
     }
 
     /**
@@ -84,7 +86,7 @@ final class AlternateGenericPrefixPostfixRegexItemDialog extends DialogWrapper {
      */
     @NotNull
     private AlternateGenericPrefixPostfixRegexItem getItem() {
-        return new AlternateGenericPrefixPostfixRegexItem(type, expressionTextField.getText(), checkBoxGrouping.isSelected());
+        return AlternateGenericPrefixPostfixRegexItem.of(type, expressionTextField.getText(), checkBoxGrouping.isSelected(), descriptionTextArea.getText());
     }
 
     /**

@@ -18,6 +18,8 @@ package altn8;
 import altn8.filechooser.AlternateFilePopupChooser;
 import altn8.filechooser.FileHandler;
 import altn8.filematcher.AlternateFileMatcher;
+import altn8.filematcher.AlternateFreeRegexFileMatcher;
+import altn8.filematcher.AlternateGenericRegexFileMatcher;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -40,15 +42,6 @@ import java.util.*;
  * Our main action
  */
 public class AlternateFileAction extends AnAction {
-    private final AlternateConfiguration configuration;
-
-    /**
-     *
-     */
-    public AlternateFileAction() {
-        this.configuration = ApplicationManager.getApplication().getComponent(AlternateApplicationComponent.class);
-    }
-
     private static VirtualFile getCurrentFile(AnActionEvent e) {
         return DataKeys.VIRTUAL_FILE.getData(e.getDataContext());
     }
@@ -99,7 +92,7 @@ public class AlternateFileAction extends AnAction {
         final String currentFilename = currentFile.getName();
 
         // get all fileMatchers
-        final List<AlternateFileMatcher> fileMatchers = configuration.getFileMatchers(currentFilename);
+        final List<AlternateFileMatcher> fileMatchers = getFileMatchers(currentFilename);
         if (!fileMatchers.isEmpty()) {
             // iterate thru files
             final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
@@ -169,6 +162,29 @@ public class AlternateFileAction extends AnAction {
             }
         }
 
+        return result;
+    }
+
+    /**
+     * @return  List with currently active FileMatchers ()
+     */
+    private List<AlternateFileMatcher> getFileMatchers(String currentFilename) {
+        AlternateConfiguration configuration = ApplicationManager.getApplication().getComponent(AlternateApplicationComponent.class).getState();
+        List<AlternateFileMatcher> result = new ArrayList<AlternateFileMatcher>();
+        // genericRegexActive (before freeRegexItems, because generic groups)
+        if (configuration.genericRegexActive) {
+            AlternateGenericRegexFileMatcher fileMatcher = new AlternateGenericRegexFileMatcher(currentFilename, configuration);
+            if (fileMatcher.canProcess()) {
+                result.add(fileMatcher);
+            }
+        }
+        // freeRegexItems
+        if (configuration.freeRegexActive) {
+            AlternateFreeRegexFileMatcher fileMatcher = new AlternateFreeRegexFileMatcher(currentFilename, configuration);
+            if (fileMatcher.canProcess()) {
+                result.add(fileMatcher);
+            }
+        }
         return result;
     }
 }

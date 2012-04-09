@@ -37,12 +37,12 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
      */
     public AlternateGenericRegexFileMatcher(String currentFilename, AlternateConfiguration configuration) {
         // create regex and count groups
-        GenRegex prefixGenRegex = createRegexPattern(configuration.getGenericPrefixRegexItems());
-        GenRegex postfixGenRegex = createRegexPattern(configuration.getGenericPostfixRegexItems());
+        GenRegex prefixGenRegex = createRegexPattern(configuration.genericPrefixRegexItems);
+        GenRegex postfixGenRegex = createRegexPattern(configuration.genericPostfixRegexItems);
 
         // create full prefix/postfixPattern
         String prefixPattern = "^" + prefixGenRegex.pattern;
-        String postfixPattern = postfixGenRegex.pattern + "(?:\\.(?:" + createFileExtensionPattern(configuration.getGenericFileExtensionRegexItems()) + "))?$";
+        String postfixPattern = postfixGenRegex.pattern + "(?:\\.(?:" + createFileExtensionPattern(configuration.genericFileExtensionRegexItems) + "))?$";
 
         // get matcher capturing the name
         Matcher matcher = Pattern.compile(prefixPattern + "(\\w+?)" + postfixPattern).matcher(currentFilename);
@@ -111,12 +111,12 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
                     sb.append("(?:");
                 }
                 sb.append("(");
-                if (item.isGrouping()) {
+                if (item.grouping) {
                     result.groupCount++;
                 } else {
                     sb.append("?:");
                 }
-                sb.append(item.getExpression()).append(")?");
+                sb.append(item.expression).append(")?");
             }
         }
         if (sb.length() > 0) {
@@ -133,7 +133,7 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
                 if (sb.length() > 0) {
                     sb.append("|");
                 }
-                sb.append(item.getFileExtension());
+                sb.append(item.fileExtension);
             }
         }
         return sb.toString();

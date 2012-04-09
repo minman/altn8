@@ -50,21 +50,21 @@ class AlternateGenericRegexPanel implements DataInterface {
     }
 
     public void pullDataFrom(AlternateConfiguration configuration) {
-        activeCheckBox.setSelected(configuration.isGenericRegexActive());
+        activeCheckBox.setSelected(configuration.genericRegexActive);
         prefixItemDataPanel.pullDataFrom(configuration);
         postfixItemDataPanel.pullDataFrom(configuration);
         fileExtensionItemDataPanel.pullDataFrom(configuration);
     }
 
     public void pushDataTo(AlternateConfiguration configuration) {
-        configuration.setGenericRegexActive(activeCheckBox.isSelected());
+        configuration.genericRegexActive = activeCheckBox.isSelected();
         prefixItemDataPanel.pushDataTo(configuration);
         postfixItemDataPanel.pushDataTo(configuration);
         fileExtensionItemDataPanel.pushDataTo(configuration);
     }
 
     public boolean isModified(AlternateConfiguration configuration) {
-        return activeCheckBox.isSelected() != configuration.isGenericRegexActive() ||
+        return activeCheckBox.isSelected() != configuration.genericRegexActive ||
                 prefixItemDataPanel.isModified(configuration) || postfixItemDataPanel.isModified(configuration) || fileExtensionItemDataPanel.isModified(configuration);
     }
 
@@ -131,7 +131,7 @@ class AlternateGenericRegexPanel implements DataInterface {
          */
         @Override
         protected void showEditDialog(@NotNull String title, @Nullable AlternateGenericFileExtensionRegexItem currentItem, @NotNull Runnable<AlternateGenericFileExtensionRegexItem> runnable) {
-            AlternateGenericFileExtensionRegexItemDialog.showDialog(title, currentItem == null ? new AlternateGenericFileExtensionRegexItem("") : currentItem, runnable);
+            AlternateGenericFileExtensionRegexItemDialog.showDialog(title, currentItem == null ? AlternateGenericFileExtensionRegexItem.of("") : currentItem, runnable);
         }
 
         /**
@@ -140,7 +140,7 @@ class AlternateGenericRegexPanel implements DataInterface {
         @Override
         @NotNull
         protected List<AlternateGenericFileExtensionRegexItem> getConfigurationItem(@NotNull AlternateConfiguration configuration) {
-            return configuration.getGenericFileExtensionRegexItems();
+            return configuration.genericFileExtensionRegexItems;
         }
 
         private static final String[] TABLECOLUMNS = new String[]{"File Extension"};
@@ -160,7 +160,7 @@ class AlternateGenericRegexPanel implements DataInterface {
                     AlternateGenericFileExtensionRegexItem item = getItems().get(rowIndex);
                     switch (columnIndex) {
                         case TABLECOLUMN_FILEEXTENSION:
-                            return item.getFileExtension();
+                            return item.fileExtension;
                     }
                     throw new IllegalArgumentException("Unknown column index: " + columnIndex);
                 }
@@ -188,7 +188,7 @@ class AlternateGenericRegexPanel implements DataInterface {
          */
         @Override
         protected void showEditDialog(@NotNull String title, @Nullable AlternateGenericPrefixPostfixRegexItem currentItem, @NotNull Runnable<AlternateGenericPrefixPostfixRegexItem> runnable) {
-            AlternateGenericPrefixPostfixRegexItemDialog.showDialog(title, currentItem == null ? new AlternateGenericPrefixPostfixRegexItem(type, "", true) : currentItem, runnable);
+            AlternateGenericPrefixPostfixRegexItemDialog.showDialog(title, currentItem == null ? AlternateGenericPrefixPostfixRegexItem.of(type, "", true, "") : currentItem, runnable);
         }
 
         private static final String[] TABLECOLUMNS = new String[]{"Expression", "Grouping"};
@@ -209,9 +209,9 @@ class AlternateGenericRegexPanel implements DataInterface {
                     AlternateGenericPrefixPostfixRegexItem item = getItems().get(rowIndex);
                     switch (columnIndex) {
                         case TABLECOLUMN_EXPRESSION:
-                            return item.getExpression();
+                            return item.expression;
                         case TABLECOLUMN_GROUPING:
-                            return item.isGrouping();
+                            return item.grouping;
                     }
                     throw new IllegalArgumentException("Unknown column index: " + columnIndex);
                 }
@@ -235,7 +235,7 @@ class AlternateGenericRegexPanel implements DataInterface {
         @Override
         @NotNull
         protected List<AlternateGenericPrefixPostfixRegexItem> getConfigurationItem(@NotNull AlternateConfiguration configuration) {
-            return configuration.getGenericPrefixRegexItems();
+            return configuration.genericPrefixRegexItems;
         }
     }
 
@@ -250,7 +250,7 @@ class AlternateGenericRegexPanel implements DataInterface {
         @Override
         @NotNull
         protected List<AlternateGenericPrefixPostfixRegexItem> getConfigurationItem(@NotNull AlternateConfiguration configuration) {
-            return configuration.getGenericPostfixRegexItems();
+            return configuration.genericPostfixRegexItems;
         }
     }
 }

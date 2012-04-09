@@ -42,7 +42,7 @@ final class AlternateGenericFileExtensionRegexItemDialog extends DialogWrapper {
         setTitle("File Extension: " + title);
         init();
         // fileExtensionTextField
-        fileExtensionTextField.setText(item.getFileExtension());
+        fileExtensionTextField.setText(item.fileExtension);
         fileExtensionTextField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 fileExtensionTextField.select(0, fileExtensionTextField.getText().length());
@@ -63,7 +63,7 @@ final class AlternateGenericFileExtensionRegexItemDialog extends DialogWrapper {
         // OK enabled if we have input...
         setOKActionEnabled(fileExtension.length() > 0);
         // Show errors (Error ist shown in html, so we convert our Messege to html)
-        setErrorText(AlternateUtils.toHTML(AlternateGenericFileExtensionRegexItem.getErrorText(fileExtension)));
+        setErrorText(AlternateUtils.toHTML(AlternateGenericFileExtensionRegexItem.validate(fileExtension)));
     }
 
     /**
@@ -79,7 +79,7 @@ final class AlternateGenericFileExtensionRegexItemDialog extends DialogWrapper {
      */
     @NotNull
     private AlternateGenericFileExtensionRegexItem getItem() {
-        return new AlternateGenericFileExtensionRegexItem(fileExtensionTextField.getText());
+        return AlternateGenericFileExtensionRegexItem.of(fileExtensionTextField.getText());
     }
 
     /**

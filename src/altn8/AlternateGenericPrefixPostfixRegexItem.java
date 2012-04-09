@@ -15,7 +15,6 @@
  */
 package altn8;
 
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,73 +26,31 @@ import java.util.regex.PatternSyntaxException;
  */
 public final class AlternateGenericPrefixPostfixRegexItem extends AbstractRegexItem {
     @NotNull
-    private final GenericType type;
+    public GenericType type;
     @NotNull
-    private final String expression;
-    private final boolean grouping;
-
-    private static final String XMLELEMENT_GENERICPREFIXPOSTFIXREGEXITEM = "genericPrefixPostfixItem";
-    private static final String XMLATTRIBUTE_TYPE = "type";
-    private static final String XMLATTRIBUTE_EXPRESSION = "expression";
-    private static final String XMLATTRIBUTE_GROUPING = "grouping";
-
-    /**
-     *
-     */
-    public AlternateGenericPrefixPostfixRegexItem(@NotNull GenericType type, @NotNull String expression, boolean grouping) {
-        this.type = type;
-        this.expression = expression;
-        this.grouping = grouping;
-        updateErrorText();
-    }
-
-    /**
-     *
-     */
-    public AlternateGenericPrefixPostfixRegexItem(@NotNull Element element) {
-        GenericType type = null;
-        try {
-            String typeName = element.getAttributeValue(XMLATTRIBUTE_TYPE);
-            if (typeName != null && typeName.length() > 0) {
-                type = GenericType.valueOf(typeName);
-            }
-        } catch (IllegalArgumentException e) {
-            // enum not found... go on with default...
-        }
-        this.type = type == null ? GenericType.POSTFIX : type;
-        this.expression = element.getAttributeValue(XMLATTRIBUTE_EXPRESSION, "");
-        this.grouping = Boolean.parseBoolean(element.getAttributeValue(XMLATTRIBUTE_GROUPING, "true"));
-        updateErrorText();
-    }
-
-    /**
-     *
-     */
-    protected  void updateErrorText() {
-        errorText = getErrorText(expression);
-    }
-
-    /**
-     *
-     */
+    public String expression;
+    public boolean grouping;
     @NotNull
-    public GenericType getType() {
-        return type;
-    }
+    public String description;
 
     /**
      *
      */
-    @NotNull
-    public String getExpression() {
-        return expression;
+    public static AlternateGenericPrefixPostfixRegexItem of(@NotNull GenericType type, @NotNull String expression, boolean grouping, @NotNull String description) {
+        AlternateGenericPrefixPostfixRegexItem item = new AlternateGenericPrefixPostfixRegexItem();
+        item.type = type;
+        item.expression = expression;
+        item.grouping = grouping;
+        item.description = description;
+        return item;
     }
 
     /**
-     *
+     * @return
      */
-    public boolean isGrouping() {
-        return grouping;
+    @Override
+    protected String validate() {
+        return validate(expression);
     }
 
     /**
@@ -117,7 +74,7 @@ public final class AlternateGenericPrefixPostfixRegexItem extends AbstractRegexI
 
         AlternateGenericPrefixPostfixRegexItem that = (AlternateGenericPrefixPostfixRegexItem) o;
 
-        return grouping == that.grouping && type == that.type && expression.equals(that.expression);
+        return grouping == that.grouping && type == that.type && expression.equals(that.expression) && description.equals(that.description);
     }
 
     /**
@@ -128,19 +85,8 @@ public final class AlternateGenericPrefixPostfixRegexItem extends AbstractRegexI
         int result = type.hashCode();
         result = 31 * result + expression.hashCode();
         result = 31 * result + (grouping ? 1 : 0);
+        result = 31 * result + description.hashCode();
         return result;
-    }
-
-    /**
-     * @return this item as JDOM-Element
-     */
-    @NotNull
-    Element asJDomElement() {
-        Element element = new Element(XMLELEMENT_GENERICPREFIXPOSTFIXREGEXITEM);
-        element.setAttribute(XMLATTRIBUTE_TYPE, getType().name());
-        element.setAttribute(XMLATTRIBUTE_EXPRESSION, getExpression());
-        element.setAttribute(XMLATTRIBUTE_GROUPING, Boolean.toString(isGrouping()));
-        return element;
     }
 
     /**
@@ -148,17 +94,20 @@ public final class AlternateGenericPrefixPostfixRegexItem extends AbstractRegexI
      */
     @Override
     public String toString() {
-        return "AlternateGenericPrefixPostfixRegexItem{" + XMLATTRIBUTE_TYPE + "=" + type + ", " +
-                XMLATTRIBUTE_EXPRESSION + "='" + expression + '\'' + ", " +
-                XMLATTRIBUTE_GROUPING + "=" + Boolean.toString(grouping) + '}';
+        return "AlternateGenericPrefixPostfixRegexItem{" +
+                "type=" + type +
+                ", expression='" + expression + '\'' +
+                ", grouping=" + grouping +
+                ", description='" + description + '\'' +
+                '}';
     }
-    
+
     /**
      * @param expression
      * @return ErrorText or null if ok
      */
     @Nullable
-    public static String getErrorText(@NotNull String expression) {
+    public static String validate(@NotNull String expression) {
         // expression
         Pattern matchPattern = null;
         try {

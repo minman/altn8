@@ -15,7 +15,6 @@
  */
 package altn8;
 
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,40 +26,23 @@ import java.util.regex.PatternSyntaxException;
  */
 public final class AlternateGenericFileExtensionRegexItem extends AbstractRegexItem {
     @NotNull
-    private final String fileExtension;
-
-    private static final String XMLELEMENT_GENERICFILEEXTENSIONREGEXITEM = "genericFileExtensionItem";
-    private static final String XMLATTRIBUTE_FILEEXTENSION = "fileExtension";
+    public String fileExtension;
 
     /**
      *
      */
-    public AlternateGenericFileExtensionRegexItem(@NotNull String fileExtensionRegex) {
-        this.fileExtension = fileExtensionRegex;
-        updateErrorText();
+    public static AlternateGenericFileExtensionRegexItem of(@NotNull String fileExtensionRegex) {
+        AlternateGenericFileExtensionRegexItem item = new AlternateGenericFileExtensionRegexItem();
+        item.fileExtension = fileExtensionRegex;
+        return item;
     }
 
     /**
-     *
+     * @return
      */
-    public AlternateGenericFileExtensionRegexItem(@NotNull Element element) {
-        this.fileExtension = element.getAttributeValue(XMLATTRIBUTE_FILEEXTENSION, "");
-        updateErrorText();
-    }
-
-    /**
-     *
-     */
-    protected void updateErrorText() {
-        errorText = getErrorText(fileExtension);
-    }
-
-    /**
-     *
-     */
-    @NotNull
-    public String getFileExtension() {
-        return fileExtension;
+    @Override
+    protected String validate() {
+        return validate(fileExtension);
     }
 
     /**
@@ -96,29 +78,21 @@ public final class AlternateGenericFileExtensionRegexItem extends AbstractRegexI
     }
 
     /**
-     * @return this item as JDOM-Element
-     */
-    @NotNull
-    Element asJDomElement() {
-        Element element = new Element(XMLELEMENT_GENERICFILEEXTENSIONREGEXITEM);
-        element.setAttribute(XMLATTRIBUTE_FILEEXTENSION, getFileExtension());
-        return element;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
-        return "AlternateGenericFileExtensionRegexItem{" + XMLATTRIBUTE_FILEEXTENSION + "='" + fileExtension + "'}";
+        return "AlternateGenericFileExtensionRegexItem{" +
+                "fileExtension='" + fileExtension + '\'' +
+                '}';
     }
-    
+
     /**
      * @param expression
      * @return ErrorText or null if ok
      */
     @Nullable
-    public static String getErrorText(@NotNull String expression) {
+    public static String validate(@NotNull String expression) {
         // fileExtension
         Pattern matchPattern = null;
         try {
