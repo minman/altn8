@@ -49,4 +49,9 @@ public abstract class AbstractRegexItem {
     public final boolean hasError() {
         return getErrorText() != null;
     }
+
+    @Nullable
+    public String getTooltip() {
+        return null;
+    }
 }

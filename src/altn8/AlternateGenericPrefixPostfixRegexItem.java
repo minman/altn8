@@ -53,6 +53,11 @@ public final class AlternateGenericPrefixPostfixRegexItem extends AbstractRegexI
         return validate(expression);
     }
 
+    @Override
+    public String getTooltip() {
+        return description;
+    }
+
     /**
      * @return  true if emtpy
      */

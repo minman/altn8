@@ -19,6 +19,7 @@ import altn8.AbstractRegexItem;
 import altn8.AlternateConfiguration;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,17 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
      */
     public AbstractDataPanel() {
         initUIComponents();
+        table.addMouseMotionListener(new MouseMotionAdapter() {
+            int lastRow = -1;
+            public void mouseMoved(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                if (row != lastRow) {
+                    lastRow = row;
+                    String tooltip = row >= 0 ? items.get(row).getTooltip() : null;
+                    table.setToolTipText(StringUtil.isEmptyOrSpaces(tooltip) ? null : tooltip);
+                }
+            }
+        });
     }
 
     /**
