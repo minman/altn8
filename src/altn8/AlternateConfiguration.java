@@ -24,6 +24,8 @@ import java.util.List;
  *
  */
 public class AlternateConfiguration {
+    // general
+    public boolean onlyFromModule;
     // freeRegex
     public boolean freeRegexActive;
     public List<AlternateFreeRegexItem> freeRegexItems;

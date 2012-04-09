@@ -87,12 +87,14 @@ public class AlternateFileAction extends AnAction {
      * If we found at minimunm one file in module, only module-files are listet. Else project files.
      */
     private List<AlternateFileGroup> findFiles(final VirtualFile currentFile, final Project project, final Module module) {
+        AlternateConfiguration configuration = ApplicationManager.getApplication().getComponent(AlternateApplicationComponent.class).getState();
+
         final Map<String, AlternateFileGroup> projectWorkMap = new HashMap<String, AlternateFileGroup>();
         final Map<String, AlternateFileGroup> moduleWorkMap = new HashMap<String, AlternateFileGroup>();
         final String currentFilename = currentFile.getName();
 
         // get all fileMatchers
-        final List<AlternateFileMatcher> fileMatchers = getFileMatchers(currentFilename);
+        final List<AlternateFileMatcher> fileMatchers = getFileMatchers(configuration, currentFilename);
         if (!fileMatchers.isEmpty()) {
             // iterate thru files
             final ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
@@ -128,10 +130,23 @@ public class AlternateFileAction extends AnAction {
             });
         }
 
-        // put all groups from workMap into a list (if moduleItems are presented, only moduleItems will be added, else projectItems)
-        List<AlternateFileGroup> result = new ArrayList<AlternateFileGroup>(!moduleWorkMap.isEmpty() ? moduleWorkMap.values() : projectWorkMap.values());
-        // sort (by baseFilename)
-        Collections.sort(result);
+        // put groups from workMap into a list and sort (by baseFilename)
+        List<AlternateFileGroup> moduleWorkList = new ArrayList<AlternateFileGroup>(moduleWorkMap.values());
+        Collections.sort(moduleWorkList);
+        List<AlternateFileGroup> projectWorkList = new ArrayList<AlternateFileGroup>(projectWorkMap.values());
+        Collections.sort(projectWorkList);
+
+        // Enhancement 5: If (at least) one corresponding file is found in the same module, show only files from module
+        List<AlternateFileGroup> result;
+        if (configuration.onlyFromModule) {
+            // if moduleItems are presented, only moduleItems will be added, else projectItems
+            result = !moduleWorkList.isEmpty() ? moduleWorkList : projectWorkList;
+        } else {
+            // add moduleItems then projectItems
+            result = new ArrayList<AlternateFileGroup>(moduleWorkList);
+            result.addAll(projectWorkList);
+        }
+
         // move group with same basefilename like current to top
         String currentBaseFilename = null;
         for (AlternateFileMatcher fileMatcher : fileMatchers) {
@@ -168,8 +183,7 @@ public class AlternateFileAction extends AnAction {
     /**
      * @return  List with currently active FileMatchers ()
      */
-    private List<AlternateFileMatcher> getFileMatchers(String currentFilename) {
-        AlternateConfiguration configuration = ApplicationManager.getApplication().getComponent(AlternateApplicationComponent.class).getState();
+    private List<AlternateFileMatcher> getFileMatchers(AlternateConfiguration configuration, String currentFilename) {
         List<AlternateFileMatcher> result = new ArrayList<AlternateFileMatcher>();
         // genericRegexActive (before freeRegexItems, because generic groups)
         if (configuration.genericRegexActive) {

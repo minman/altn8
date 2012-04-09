@@ -18,26 +18,51 @@ package altn8.ui;
 import altn8.AlternateConfiguration;
 import com.intellij.openapi.ui.Splitter;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class AlternateConfigurationPanel extends Splitter implements DataInterface {
+public class AlternateConfigurationPanel implements DataInterface {
     private List<DataInterface> dataInterfaces = new ArrayList<DataInterface>();
+    private JPanel regexSplitter;
+    private JPanel rootComponent;
+    private JCheckBox onlyFromModuleCheckBox;
 
     public AlternateConfigurationPanel() {
-        super(true, 0.5f);
-        setHonorComponentsMinimumSize(true);
+        dataInterfaces.add(new DataInterface() {
+            public void pullDataFrom(AlternateConfiguration configuration) {
+                onlyFromModuleCheckBox.setSelected(configuration.onlyFromModule);
+            }
+
+            public void pushDataTo(AlternateConfiguration configuration) {
+                configuration.onlyFromModule = onlyFromModuleCheckBox.isSelected();
+            }
+
+            public boolean isModified(AlternateConfiguration configuration) {
+               return onlyFromModuleCheckBox.isSelected() != configuration.onlyFromModule;
+            }
+        });
+
+        ((Splitter) regexSplitter).setHonorComponentsMinimumSize(true);
         // genericRegexPanel
         AlternateGenericRegexPanel genericRegexPanel = new AlternateGenericRegexPanel();
         dataInterfaces.add(genericRegexPanel);
-        setFirstComponent(genericRegexPanel.getRootComponent());
+        ((Splitter) regexSplitter).setFirstComponent(genericRegexPanel.getRootComponent());
         // freeRegexPanel
         AlternateFreeRegexPanel freeRegexPanel = new AlternateFreeRegexPanel();
         dataInterfaces.add(freeRegexPanel);
-        setSecondComponent(freeRegexPanel.getRootComponent());
+        ((Splitter) regexSplitter).setSecondComponent(freeRegexPanel.getRootComponent());
+    }
+
+    private void createUIComponents() {
+        regexSplitter = new Splitter(true, 0.5f);
+    }
+
+    public JPanel getRootComponent() {
+        return rootComponent;
     }
 
     /**

@@ -60,7 +60,7 @@ public class AlternateApplicationComponent implements ApplicationComponent, Conf
         if (dataInterface == null) {
             dataInterface = new AlternateConfigurationPanel();
         }
-        return dataInterface;
+        return dataInterface.getRootComponent();
     }
 
     public boolean isModified() {

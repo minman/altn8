@@ -15,8 +15,9 @@
     <change-notes><![CDATA[
         <u>1.3.0</u><br>
         + Available for all IntelliJ Platform Products<br>
+        + New option 'If (at least) one corresponding file is found in the same module, show only files from module' (enhancement 5)<br>
         + Descriptions for generic regex added<br>
-        If you update from earlier version you need to reconfigure altn8<br>
+        Note: If you update from earlier version you need to reconfigure altn8<br>
         <u>1.2.0</u><br>
         + new fabulous and powerful generic regex configuration<br>
         + grouping of files in popup<br>
