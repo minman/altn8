@@ -6,6 +6,8 @@
     <description><![CDATA[
         Open Alternate File: i.e. jump from source to test file, maven resource, html file, properties file, etc... configured using regular expressions.<br>
         <br>
+        Usage: Just use [ALT]&[8] to popup all matching files.<br>
+        <br>
         Thanks to LeapingFrogs.com for the original plugin.
         ]]>
     </description>
