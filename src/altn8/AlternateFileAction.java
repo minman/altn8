@@ -23,7 +23,8 @@ import altn8.filematcher.AlternateGenericRegexFileMatcher;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
@@ -43,19 +44,19 @@ import java.util.*;
  */
 public class AlternateFileAction extends AnAction {
     private static VirtualFile getCurrentFile(AnActionEvent e) {
-        return DataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+        return PlatformDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
     }
 
     private static Project getProject(AnActionEvent e) {
-        return DataKeys.PROJECT.getData(e.getDataContext());
+        return PlatformDataKeys.PROJECT.getData(e.getDataContext());
     }
 
     private static Module getModule(AnActionEvent e) {
-        return DataKeys.MODULE.getData(e.getDataContext());
+        return LangDataKeys.MODULE.getData(e.getDataContext());
     }
 
     private static Editor getEditor(AnActionEvent e) {
-        return DataKeys.EDITOR.getData(e.getDataContext());
+        return PlatformDataKeys.EDITOR.getData(e.getDataContext());
     }
 
     /**
