@@ -71,7 +71,10 @@ public class AlternateFileAction extends AnAction {
             List<AlternateFileGroup> fileGroups = findFiles(currentFile, currentProject, getModule(e));
             if (fileGroups.isEmpty()) {
                 // nothing found
-                HintManager.getInstance().showInformationHint(getEditor(e), "No corresponding file(s) found");
+                Editor editor = getEditor(e);
+                if (editor != null) { // fix issue 9: can only display hint if there is a editor instance
+                    HintManager.getInstance().showInformationHint(editor, "No corresponding file(s) found");
+                }
             } else {
                 // open these...
                 AlternateFilePopupChooser.prompt("Select the file(s) to open", fileGroups, currentProject, new FileHandler() {
