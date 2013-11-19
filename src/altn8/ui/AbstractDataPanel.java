@@ -17,8 +17,8 @@ package altn8.ui;
 
 import altn8.AbstractRegexItem;
 import altn8.AlternateConfiguration;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -136,7 +136,7 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
         DefaultActionGroup actionGroup = new DefaultActionGroup();
 
         // buttonAdd
-        actionGroup.add(new AnAction("Add", "Add new item...", IconLoader.getIcon("/general/add.png")) {
+        actionGroup.add(new AnAction("Add", "Add new item...", AllIcons.General.Add) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 doAdd();
@@ -149,7 +149,7 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
         });
 
         // buttonRemove
-        actionGroup.add(new AnAction("Remove", "Remove item...", IconLoader.getIcon("/general/remove.png")) {
+        actionGroup.add(new AnAction("Remove", "Remove item...", AllIcons.General.Remove) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 doRemove();
@@ -162,7 +162,7 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
         });
 
         // buttonEdit
-        actionGroup.add(new AnAction("Edit", "Edit item...", IconLoader.getIcon("/actions/editSource.png")) {
+        actionGroup.add(new AnAction("Edit", "Edit item...", AllIcons.Actions.Edit) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 doEdit();
@@ -175,7 +175,7 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
         });
 
         // buttonCopy
-        actionGroup.add(new AnAction("Copy", "Copy item...", IconLoader.getIcon("/general/copy.png")) {
+        actionGroup.add(new AnAction("Copy", "Copy item...", AllIcons.Actions.Copy) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 doCopy();
@@ -190,7 +190,7 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
         actionGroup.addSeparator();
 
         // buttonMoveUp
-        actionGroup.add(new AnAction("Move Up", "Move item up...", IconLoader.getIcon("/actions/moveUp.png")) {
+        actionGroup.add(new AnAction("Move Up", "Move item up...", AllIcons.Actions.MoveUp) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 doMove(true);
@@ -203,7 +203,7 @@ abstract class AbstractDataPanel<I extends AbstractRegexItem> implements DataInt
         });
 
         // buttonMoveDown
-        actionGroup.add(new AnAction("Move Down", "Move item down...", IconLoader.getIcon("/actions/moveDown.png")) {
+        actionGroup.add(new AnAction("Move Down", "Move item down...", AllIcons.Actions.MoveDown) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 doMove(false);
