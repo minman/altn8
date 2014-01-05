@@ -31,6 +31,7 @@ public class AlternateConfiguration {
     public List<AlternateFreeRegexItem> freeRegexItems;
     // genericRegex
     public boolean genericRegexActive;
+    public boolean caseInsensitiveBasename;
 
     @AbstractCollection(surroundWithTag = false, elementTypes = AlternateGenericPrefixPostfixRegexItem.class)
     public List<AlternateGenericPrefixPostfixRegexItem> genericPrefixRegexItems;
