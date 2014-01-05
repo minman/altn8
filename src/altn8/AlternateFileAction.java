@@ -117,12 +117,13 @@ public class AlternateFileAction extends AnAction {
                                         Map<String, AlternateFileGroup> workMap = module.equals(projectFileIndex.getModuleForFile(fileOrDir)) ? moduleWorkMap : projectWorkMap;
                                         // add to module or project group
                                         String baseFilename = fileMatcher.getBaseFilename(fileOrDir.getName());
-                                        AlternateFileGroup group = workMap.get(baseFilename);
+                                        String groupId = groupId(baseFilename);
+                                        AlternateFileGroup group = workMap.get(groupId);
                                         if (group == null) {
-                                            group = new AlternateFileGroup(baseFilename);
-                                            workMap.put(baseFilename, group);
+                                            group = new AlternateFileGroup(groupId);
+                                            workMap.put(groupId, group);
                                         }
-                                        group.getFiles().add(psiFile);
+                                        group.addFile(baseFilename, psiFile);
                                     }
                                     break;
                                 }
@@ -134,7 +135,7 @@ public class AlternateFileAction extends AnAction {
             });
         }
 
-        // put groups from workMap into a list and sort (by baseFilename)
+        // put groups into lists and sort (by baseFilename)
         List<AlternateFileGroup> moduleWorkList = new ArrayList<AlternateFileGroup>(moduleWorkMap.values());
         Collections.sort(moduleWorkList);
         List<AlternateFileGroup> projectWorkList = new ArrayList<AlternateFileGroup>(projectWorkMap.values());
@@ -151,18 +152,18 @@ public class AlternateFileAction extends AnAction {
             result.addAll(projectWorkList);
         }
 
-        // move group with same basefilename like current to top
-        String currentBaseFilename = null;
+        // move current file's group to top
+        String currentGroupId = null;
         for (AlternateFileMatcher fileMatcher : fileMatchers) {
             if (fileMatcher.matches(currentFilename)) {
-                currentBaseFilename = fileMatcher.getBaseFilename(currentFilename);
+                currentGroupId = groupId(fileMatcher.getBaseFilename(currentFilename));
                 break;
             }
         }
-        if (currentBaseFilename != null && currentBaseFilename.length() > 0) {
+        if (currentGroupId != null && currentGroupId.length() > 0) {
             for (int i = 0, resultSize = result.size(); i < resultSize; i++) {
                 AlternateFileGroup fileGroup = result.get(i);
-                if (fileGroup.getBaseFilename().equals(currentBaseFilename)) {
+                if (fileGroup.getGroupId().equals(currentGroupId)) {
                     if (i > 0) {
                         result.add(0, result.remove(i));
                     }
@@ -170,10 +171,10 @@ public class AlternateFileAction extends AnAction {
                 }
             }
         }
-        // move group with no basefilename to bottom
+        // move group with no id to bottom
         for (int i = 0, resultSize = result.size(); i < resultSize; i++) {
             AlternateFileGroup fileGroup = result.get(i);
-            if (fileGroup.getBaseFilename().length() == 0) {
+            if (fileGroup.getGroupId().length() == 0) {
                 if (i < result.size() - 1) {
                     result.add(result.remove(i));
                 }
@@ -182,6 +183,12 @@ public class AlternateFileAction extends AnAction {
         }
 
         return result;
+    }
+
+    @NotNull
+    private static String groupId(@NotNull String baseFilename) {
+        // group id is lowecase of basefilename
+        return baseFilename.toLowerCase(Locale.ENGLISH);
     }
 
     /**

@@ -23,6 +23,7 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -83,6 +84,7 @@ public class AlternateApplicationComponent implements ApplicationComponent, Conf
         dataInterface = null;
     }
 
+    @NotNull
     public AlternateConfiguration getState() {
         return alternateConfiguration;
     }

@@ -16,6 +16,7 @@
 package altn8;
 
 import com.intellij.psi.PsiFile;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,22 +25,45 @@ import java.util.List;
  *
  */
 public class AlternateFileGroup implements Comparable<AlternateFileGroup> {
-    private String baseFilename;
-    private List<PsiFile> files;
+    private String groupId;
+    private List<String> baseFilenames = new ArrayList<String>();
+    private List<PsiFile> files = new ArrayList<PsiFile>();
 
     /**
      *
      */
-    public AlternateFileGroup(String baseFilename) {
-        this.baseFilename = baseFilename;
-        this.files = new ArrayList<PsiFile>();
+    public AlternateFileGroup(@NotNull String groupId) {
+        this.groupId = groupId;
     }
 
     /**
-     * BiseFilename of this Group
+     * Id of this Group
      */
-    public String getBaseFilename() {
-        return baseFilename;
+    @NotNull
+    public String getGroupId() {
+        return groupId;
+    }
+
+    @NotNull
+    public String getGroupTitle() {
+        if (baseFilenames.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String baseFilename : baseFilenames) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(baseFilename);
+        }
+        return sb.toString();
+    }
+
+    public void addFile(@NotNull String baseFilename, @NotNull PsiFile psiFile) {
+        if (!baseFilenames.contains(baseFilename)) {
+            baseFilenames.add(baseFilename);
+        }
+        files.add(psiFile);
     }
 
     /**
@@ -63,7 +87,7 @@ public class AlternateFileGroup implements Comparable<AlternateFileGroup> {
 
         AlternateFileGroup that = (AlternateFileGroup) o;
 
-        return baseFilename.equals(that.baseFilename);
+        return groupId.equals(that.groupId);
     }
 
     /**
@@ -71,13 +95,13 @@ public class AlternateFileGroup implements Comparable<AlternateFileGroup> {
      */
     @Override
     public int hashCode() {
-        return baseFilename.hashCode();
+        return groupId.hashCode();
     }
 
     /**
      * {@inheritDoc}
      */
     public int compareTo(AlternateFileGroup o) {
-        return baseFilename.compareTo(o.baseFilename);
+        return groupId.compareTo(o.groupId);
     }
 }

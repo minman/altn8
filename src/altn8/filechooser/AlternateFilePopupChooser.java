@@ -66,7 +66,7 @@ public final class AlternateFilePopupChooser {
                     // go thru all groups
                     for (AlternateFileGroup fileGroup : fileGroups) {
                         // add basefilename (will be presented as title) and all files
-                        list.add(fileGroup.getBaseFilename());
+                        list.add(fileGroup.getGroupTitle());
                         list.addAll(fileGroup.getFiles());
                     }
                 }
