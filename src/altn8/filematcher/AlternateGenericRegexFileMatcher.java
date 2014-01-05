@@ -20,7 +20,9 @@ import altn8.AlternateGenericFileExtensionRegexItem;
 import altn8.AlternateGenericPrefixPostfixRegexItem;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +31,7 @@ import java.util.regex.Pattern;
  */
 public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
     private Pattern matchPattern;
-    private String replacePattern;
+    private int matchPatternGroupCount;
     private String name;
 
     /**
@@ -50,18 +52,20 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
         name = matcher.matches() ? matcher.group(prefixGenRegex.groupCount + 1) : "";
 
         // we have our name so we can create our pattern to test filenames
-        matchPattern = Pattern.compile(prefixPattern + Pattern.quote(name) + postfixPattern);
-
-        // create replacePattern to build baseFilename ($1$2$3FooBar$4$5)
         StringBuilder sb = new StringBuilder();
-        for (int i = 1, n = prefixGenRegex.groupCount; i <= n; i++) {
-            sb.append('$').append(i);
+        sb.append(prefixPattern);
+        if (configuration.caseInsensitiveBasename) {
+            sb.append("(?i)");
         }
-        sb.append(name);
-        for (int i = prefixGenRegex.groupCount + 1, n = prefixGenRegex.groupCount + postfixGenRegex.groupCount; i <= n; i++) {
-            sb.append('$').append(i);
+        sb.append('(').append(Pattern.quote(name)).append(')');
+        if (configuration.caseInsensitiveBasename) {
+            sb.append("(?-i)");
         }
-        replacePattern = sb.toString();
+        sb.append(postfixPattern);
+        matchPattern = Pattern.compile(sb.toString());
+
+        //
+        matchPatternGroupCount = prefixGenRegex.groupCount + postfixGenRegex.groupCount + 1; // + 1 for the name
 
         /*
             ^
@@ -158,6 +162,24 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
      */
     @NotNull
     public String getBaseFilename(@NotNull String filename) {
-        return matchPattern.matcher(filename).replaceAll(replacePattern);
+        return matchPattern.matcher(filename).replaceAll(getReplacePattern(matchPatternGroupCount));
+    }
+
+    private static final Map<Integer, String> REPLACEPATTERNS = new HashMap<Integer, String>();
+
+    /**
+     * @return replacePattern to build baseFilename (ex: groupCount is 5 -> "$1$2$3$4$5")
+     */
+    private static String getReplacePattern(int groupCount) {
+        String replacePattern = REPLACEPATTERNS.get(groupCount);
+        if (replacePattern == null) {
+            StringBuilder sb = new StringBuilder(groupCount * 2);
+            for (int i = 0; i < groupCount; i++) {
+                sb.append('$').append(i + 1);
+            }
+            replacePattern = sb.toString();
+            REPLACEPATTERNS.put(groupCount, replacePattern);
+        }
+        return replacePattern;
     }
 }

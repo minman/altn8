@@ -37,6 +37,7 @@ class AlternateGenericRegexPanel implements DataInterface {
     private JCheckBox activeCheckBox;
     @SuppressWarnings({"UnusedDeclaration"})
     private JPanel dataPanel;
+    private JCheckBox caseInsensitiveBasenameCheckBox;
     private AlternateGenericAbstractRegexItemDataPanel prefixItemDataPanel;
     private AlternateGenericAbstractRegexItemDataPanel postfixItemDataPanel;
     private AlternateGenericFileExtensionRegexItemDataPanel fileExtensionItemDataPanel;
@@ -51,6 +52,7 @@ class AlternateGenericRegexPanel implements DataInterface {
 
     public void pullDataFrom(AlternateConfiguration configuration) {
         activeCheckBox.setSelected(configuration.genericRegexActive);
+        caseInsensitiveBasenameCheckBox.setSelected(configuration.caseInsensitiveBasename);
         prefixItemDataPanel.pullDataFrom(configuration);
         postfixItemDataPanel.pullDataFrom(configuration);
         fileExtensionItemDataPanel.pullDataFrom(configuration);
@@ -58,13 +60,14 @@ class AlternateGenericRegexPanel implements DataInterface {
 
     public void pushDataTo(AlternateConfiguration configuration) {
         configuration.genericRegexActive = activeCheckBox.isSelected();
+        configuration.caseInsensitiveBasename = caseInsensitiveBasenameCheckBox.isSelected();
         prefixItemDataPanel.pushDataTo(configuration);
         postfixItemDataPanel.pushDataTo(configuration);
         fileExtensionItemDataPanel.pushDataTo(configuration);
     }
 
     public boolean isModified(AlternateConfiguration configuration) {
-        return activeCheckBox.isSelected() != configuration.genericRegexActive ||
+        return activeCheckBox.isSelected() != configuration.genericRegexActive || caseInsensitiveBasenameCheckBox.isSelected() != configuration.caseInsensitiveBasename ||
                 prefixItemDataPanel.isModified(configuration) || postfixItemDataPanel.isModified(configuration) || fileExtensionItemDataPanel.isModified(configuration);
     }
 
@@ -117,6 +120,7 @@ class AlternateGenericRegexPanel implements DataInterface {
      * stupid Swing does not enable/disable child of a container... so we have to do manualy...
      */
     private void updateEnabled(boolean enabled) {
+        caseInsensitiveBasenameCheckBox.setEnabled(enabled);
         prefixItemDataPanel.updateEnabled(enabled);
         postfixItemDataPanel.updateEnabled(enabled);
         fileExtensionItemDataPanel.updateEnabled(enabled);

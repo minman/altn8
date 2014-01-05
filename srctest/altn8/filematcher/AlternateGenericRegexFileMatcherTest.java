@@ -67,6 +67,12 @@ public class AlternateGenericRegexFileMatcherTest extends AlternateFileMatcherTe
             "AbstractMyClassTest.properties",
             "AbstractMyClassTest_en.properties",
             "AbstractMyClassTest_en_UK.properties",
+
+            // caseInsensitiveBasename
+            "myclass.html",
+            "myclass_de.html",
+            "test_myclass.html",
+            "test_myclass_de.html"
     };
 
     @Override
@@ -104,5 +110,44 @@ public class AlternateGenericRegexFileMatcherTest extends AlternateFileMatcherTe
                 "AbstractMyClassTest|AbstractMyClassTest_en.properties",
                 "AbstractMyClassTest|AbstractMyClassTest_en_UK.properties",
         }, getMatchList(new AlternateGenericRegexFileMatcher("MyClass.java", configuration)));
+    }
+
+    @Test
+    public void testMatchesCaseInsensitive() throws Exception {
+        // prepare test
+        AlternateConfiguration configuration = new AlternateConfiguration();
+        configuration.freeRegexActive = false;
+        configuration.genericRegexActive = true;
+        configuration.caseInsensitiveBasename = true;
+
+        // make our tests
+
+        assertArrayEquals(new Object[]{
+                "MyClass|MyClass.java",
+                "MyClass|MyClass.properties",
+                "MyClass|MyClass_en.properties",
+                "MyClass|MyClass_en_UK.properties",
+
+                "MyClassTest|MyClassTest.java",
+                "MyClassTest|MyClassTest.properties",
+                "MyClassTest|MyClassTest_en.properties",
+                "MyClassTest|MyClassTest_en_UK.properties",
+
+                "AbstractMyClass|AbstractMyClass.java",
+                "AbstractMyClass|AbstractMyClass.properties",
+                "AbstractMyClass|AbstractMyClass_en.properties",
+                "AbstractMyClass|AbstractMyClass_en_UK.properties",
+
+                "AbstractMyClassTest|AbstractMyClassTest.java",
+                "AbstractMyClassTest|AbstractMyClassTest.properties",
+                "AbstractMyClassTest|AbstractMyClassTest_en.properties",
+                "AbstractMyClassTest|AbstractMyClassTest_en_UK.properties",
+
+                "myclass|myclass.html",
+                "myclass|myclass_de.html",
+                "test_myclass|test_myclass.html",
+                "test_myclass|test_myclass_de.html"
+
+        }, getMatchList(new AlternateGenericRegexFileMatcher("myClass.xml", configuration)));
     }
 }
