@@ -7,7 +7,7 @@
     <description><![CDATA[
         Open Alternate File: i.e. jump from source to test file, maven resource, html file, properties file, etc... configured using regular expressions.<br>
         <br>
-        Usage: Just use [ALT]&[8] to popup all matching files.<br>
+        Usage: Just use [ALT][8] to popup all matching files (Mac OS: [CMD][ALT][8]).<br>
         <br>
         Thanks to LeapingFrogs.com for the original plugin.
         ]]>
@@ -29,6 +29,8 @@
                 text="Alternate File"
                 description="Switch the editor to the alternate file">
             <keyboard-shortcut keymap="$default" first-keystroke="alt 8"/>
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta alt 8"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta alt 8"/>
             <add-to-group group-id="EditorPopupMenu.GoTo" anchor="first"/>
         </action>
     </actions>
