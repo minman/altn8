@@ -12,11 +12,11 @@
         Thanks to LeapingFrogs.com for the original plugin.
         ]]>
     </description>
-    <vendor url="http://code.google.com/p/altn8">Minas Manthos</vendor>
+    <vendor url="https://github.com/minman/altn8">Minas Manthos</vendor>
     <!-- 129.161 -> 12.1 -->
     <idea-version since-build="129.161"/>
     <depends>com.intellij.modules.lang</depends>
-    <change-notes><![CDATA[See <a href="http://code.google.com/p/altn8/wiki/ChangeNotes">change notes</a>.]]></change-notes>
+    <change-notes><![CDATA[See <a href="https://github.com/minman/altn8/wiki/Change-Notes">change notes</a>.]]></change-notes>
 
     <application-components>
         <component>
