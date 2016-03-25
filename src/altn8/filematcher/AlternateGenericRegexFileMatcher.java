@@ -16,8 +16,9 @@
 package altn8.filematcher;
 
 import altn8.AlternateConfiguration;
-import altn8.AlternateGenericFileExtensionRegexItem;
 import altn8.AlternateGenericPrefixPostfixRegexItem;
+import com.intellij.openapi.fileTypes.*;
+import com.intellij.util.PatternUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
 
         // create full prefix/postfixPattern
         String prefixPattern = "^" + prefixGenRegex.pattern;
-        String postfixPattern = postfixGenRegex.pattern + "(?:\\.(?:" + createFileExtensionPattern(configuration.genericFileExtensionRegexItems) + "))?$";
+        String postfixPattern = postfixGenRegex.pattern + "(?:\\.(?:" + createFileExtensionPattern() + "))?$";
 
         // get matcher capturing the name
         Matcher matcher = Pattern.compile(prefixPattern + "(\\w+?)" + postfixPattern).matcher(currentFilename);
@@ -130,14 +131,26 @@ public class AlternateGenericRegexFileMatcher implements AlternateFileMatcher {
         return result;
     }
 
-    private String createFileExtensionPattern(List<AlternateGenericFileExtensionRegexItem> items) {
+    private String createFileExtensionPattern() {
         StringBuilder sb = new StringBuilder();
-        for (AlternateGenericFileExtensionRegexItem item : items) {
-            if (!item.hasError()) {
-                if (sb.length() > 0) {
-                    sb.append("|");
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        for (FileType fileType : fileTypeManager.getRegisteredFileTypes()) {
+            for (FileNameMatcher fileNameMatcher : fileTypeManager.getAssociations(fileType)) {
+                String extension = null;
+                if (fileNameMatcher instanceof ExtensionFileNameMatcher) {
+                    extension = ((ExtensionFileNameMatcher) fileNameMatcher).getExtension();
+                } else if (fileNameMatcher instanceof WildcardFileNameMatcher) {
+                    String pattern = ((WildcardFileNameMatcher) fileNameMatcher).getPattern();
+                    if (pattern.startsWith("*.")) { // we only support matcher starting with *. assuming it's a file extension
+                        extension = PatternUtil.convertToRegex(pattern.substring(2));
+                    }
                 }
-                sb.append(item.fileExtension);
+                if (extension != null) {
+                    if (sb.length() > 0) {
+                        sb.append("|");
+                    }
+                    sb.append(extension);
+                }
             }
         }
         return sb.toString();

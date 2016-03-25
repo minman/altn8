@@ -16,7 +16,6 @@
 package altn8.ui;
 
 import altn8.AlternateConfiguration;
-import altn8.AlternateGenericFileExtensionRegexItem;
 import altn8.AlternateGenericPrefixPostfixRegexItem;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -40,7 +39,6 @@ class AlternateGenericRegexPanel implements DataInterface {
     private JCheckBox caseInsensitiveBasenameCheckBox;
     private AlternateGenericAbstractRegexItemDataPanel prefixItemDataPanel;
     private AlternateGenericAbstractRegexItemDataPanel postfixItemDataPanel;
-    private AlternateGenericFileExtensionRegexItemDataPanel fileExtensionItemDataPanel;
 
     public AlternateGenericRegexPanel() {
         initUIComponents();
@@ -55,7 +53,6 @@ class AlternateGenericRegexPanel implements DataInterface {
         caseInsensitiveBasenameCheckBox.setSelected(configuration.caseInsensitiveBasename);
         prefixItemDataPanel.pullDataFrom(configuration);
         postfixItemDataPanel.pullDataFrom(configuration);
-        fileExtensionItemDataPanel.pullDataFrom(configuration);
     }
 
     public void pushDataTo(AlternateConfiguration configuration) {
@@ -63,12 +60,11 @@ class AlternateGenericRegexPanel implements DataInterface {
         configuration.caseInsensitiveBasename = caseInsensitiveBasenameCheckBox.isSelected();
         prefixItemDataPanel.pushDataTo(configuration);
         postfixItemDataPanel.pushDataTo(configuration);
-        fileExtensionItemDataPanel.pushDataTo(configuration);
     }
 
     public boolean isModified(AlternateConfiguration configuration) {
         return activeCheckBox.isSelected() != configuration.genericRegexActive || caseInsensitiveBasenameCheckBox.isSelected() != configuration.caseInsensitiveBasename ||
-                prefixItemDataPanel.isModified(configuration) || postfixItemDataPanel.isModified(configuration) || fileExtensionItemDataPanel.isModified(configuration);
+                prefixItemDataPanel.isModified(configuration) || postfixItemDataPanel.isModified(configuration);
     }
 
     /**
@@ -77,21 +73,15 @@ class AlternateGenericRegexPanel implements DataInterface {
     private void createUIComponents() {
         prefixItemDataPanel = new AlternateGenericPrefixRegexItemDataPanel();
         postfixItemDataPanel = new AlternateGenericPostfixRegexItemDataPanel();
-        fileExtensionItemDataPanel = new AlternateGenericFileExtensionRegexItemDataPanel();
 
-        Splitter innerSplitter = new Splitter(false, 0.5f);
-        innerSplitter.setHonorComponentsMinimumSize(true);
+        Splitter splitter = new Splitter(false, 0.5f);
+        splitter.setHonorComponentsMinimumSize(true);
 
-        innerSplitter.setFirstComponent(createItemDataPanel(prefixItemDataPanel, AlternateGenericPrefixPostfixRegexItem.GenericType.PREFIX.getText()));
-        innerSplitter.setSecondComponent(createItemDataPanel(postfixItemDataPanel, AlternateGenericPrefixPostfixRegexItem.GenericType.POSTFIX.getText()));
-
-        Splitter outerSplitter = new Splitter(false, 0.67f);
-        outerSplitter.setHonorComponentsMinimumSize(true);
-        outerSplitter.setFirstComponent(innerSplitter);
-        outerSplitter.setSecondComponent(createItemDataPanel(fileExtensionItemDataPanel, "File Extension"));
+        splitter.setFirstComponent(createItemDataPanel(prefixItemDataPanel, AlternateGenericPrefixPostfixRegexItem.GenericType.PREFIX.getText()));
+        splitter.setSecondComponent(createItemDataPanel(postfixItemDataPanel, AlternateGenericPrefixPostfixRegexItem.GenericType.POSTFIX.getText()));
 
         //
-        dataPanel = outerSplitter;
+        dataPanel = splitter;
     }
 
     private JPanel createItemDataPanel(AbstractDataPanel itemDataPanel, String title) {
@@ -123,58 +113,6 @@ class AlternateGenericRegexPanel implements DataInterface {
         caseInsensitiveBasenameCheckBox.setEnabled(enabled);
         prefixItemDataPanel.updateEnabled(enabled);
         postfixItemDataPanel.updateEnabled(enabled);
-        fileExtensionItemDataPanel.updateEnabled(enabled);
-    }
-
-    /**
-     *
-     */
-    private static class AlternateGenericFileExtensionRegexItemDataPanel extends AbstractDataPanel<AlternateGenericFileExtensionRegexItem> {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected void showEditDialog(@NotNull String title, @Nullable AlternateGenericFileExtensionRegexItem currentItem, @NotNull Runnable<AlternateGenericFileExtensionRegexItem> runnable) {
-            AlternateGenericFileExtensionRegexItemDialog.showDialog(title, currentItem == null ? AlternateGenericFileExtensionRegexItem.of("") : currentItem, runnable);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @NotNull
-        protected List<AlternateGenericFileExtensionRegexItem> getConfigurationItem(@NotNull AlternateConfiguration configuration) {
-            return configuration.genericFileExtensionRegexItems;
-        }
-
-        private static final String[] TABLECOLUMNS = new String[]{"File Extension"};
-        private static final int TABLECOLUMN_FILEEXTENSION = 0;
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected DataTableModel createTableModel() {
-            return new DataTableModel() {
-                public int getColumnCount() {
-                    return TABLECOLUMNS.length;
-                }
-
-                public Object getValueAt(int rowIndex, int columnIndex) {
-                    AlternateGenericFileExtensionRegexItem item = getItems().get(rowIndex);
-                    switch (columnIndex) {
-                        case TABLECOLUMN_FILEEXTENSION:
-                            return item.fileExtension;
-                    }
-                    throw new IllegalArgumentException("Unknown column index: " + columnIndex);
-                }
-
-                @Override
-                public String getColumnName(int column) {
-                    return TABLECOLUMNS[column];
-                }
-            };
-        }
     }
 
     /**

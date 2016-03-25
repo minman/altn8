@@ -37,19 +37,15 @@ public class AlternateConfiguration {
     public List<AlternateGenericPrefixPostfixRegexItem> genericPrefixRegexItems;
     @AbstractCollection(surroundWithTag = false, elementTypes = AlternateGenericPrefixPostfixRegexItem.class)
     public List<AlternateGenericPrefixPostfixRegexItem> genericPostfixRegexItems;
-    @AbstractCollection(surroundWithTag = false, elementTypes = AlternateGenericFileExtensionRegexItem.class)
-    public List<AlternateGenericFileExtensionRegexItem> genericFileExtensionRegexItems;
 
     public AlternateConfiguration() {
         // genericRegex
         genericRegexActive = true;
         genericPrefixRegexItems = new ArrayList<AlternateGenericPrefixPostfixRegexItem>();
         genericPostfixRegexItems = new ArrayList<AlternateGenericPrefixPostfixRegexItem>();
-        genericFileExtensionRegexItems = new ArrayList<AlternateGenericFileExtensionRegexItem>();
         // -> fill defaults
         addDefaultGenericPrefixRegexItems();
         addDefaultGenericPostfixRegexItems();
-        addDefaultGenericFileExtensionItems();
         // freeRegex
         freeRegexActive = false; // default false, genericRegex are forced
         freeRegexItems = new ArrayList<AlternateFreeRegexItem>();
@@ -83,23 +79,5 @@ public class AlternateConfiguration {
         genericPostfixRegexItems.add(AlternateGenericPrefixPostfixRegexItem.of(AlternateGenericPrefixPostfixRegexItem.GenericType.POSTFIX, "Impl", true, "Implementations"));
         genericPostfixRegexItems.add(AlternateGenericPrefixPostfixRegexItem.of(AlternateGenericPrefixPostfixRegexItem.GenericType.POSTFIX, "[Tt]est", true, "Test classes and files"));
         genericPostfixRegexItems.add(AlternateGenericPrefixPostfixRegexItem.of(AlternateGenericPrefixPostfixRegexItem.GenericType.POSTFIX, "(?:_\\w{2}(?:_\\w{2})?)", false, "Locales (ex: 'description_en_UK.properties')"));
-    }
-
-    /**
-     *
-     */
-    private void addDefaultGenericFileExtensionItems() {
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("java"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("properties"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("html?"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("sql"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("xml"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("dtd"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("xsd"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("rb"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("py"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("php"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("pl"));
-        genericFileExtensionRegexItems.add(AlternateGenericFileExtensionRegexItem.of("pm"));
     }
 }

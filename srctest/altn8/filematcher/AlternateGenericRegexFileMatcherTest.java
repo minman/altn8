@@ -16,7 +16,19 @@
 package altn8.filematcher;
 
 import altn8.AlternateConfiguration;
+import com.intellij.lang.Language;
+import com.intellij.mock.MockApplicationEx;
+import com.intellij.mock.MockFileTypeManager;
+import com.intellij.mock.MockLanguageFileType;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileTypes.*;
+import org.jetbrains.annotations.NotNull;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -24,6 +36,35 @@ import static org.junit.Assert.assertArrayEquals;
  *
  */
 public class AlternateGenericRegexFileMatcherTest extends AlternateFileMatcherTest {
+
+    private static final List FILE_NAME_MATCHERS = Arrays.asList(
+            new ExtensionFileNameMatcher("java"),
+            new ExtensionFileNameMatcher("properties"),
+            new WildcardFileNameMatcher("*.htm?"),
+            new ExtensionFileNameMatcher("xml")
+    );
+
+    @Before
+    public void setUp() throws Exception {
+        Disposable dummyDisposable = new Disposable() {public void dispose() {}};
+        MockApplicationEx mockApplicationEx = new MockApplicationEx(dummyDisposable);
+        ApplicationManager.setApplication(mockApplicationEx, dummyDisposable);
+        mockApplicationEx.addComponent(FileTypeManager.class, new MockFileTypeManager(null) {
+            @NotNull
+            @Override
+            public FileType[] getRegisteredFileTypes() {
+                return new FileType[]{new MockLanguageFileType(Language.ANY, "foo")};
+            }
+
+            @NotNull
+            @Override
+            public List<FileNameMatcher> getAssociations(@NotNull FileType type) {
+                //noinspection unchecked
+                return FILE_NAME_MATCHERS;
+            }
+        });
+    }
+
     /**
      * Our filelist with all files in project to test
      */
