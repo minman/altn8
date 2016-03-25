@@ -13,8 +13,8 @@
         ]]>
     </description>
     <vendor url="https://github.com/minman/altn8">Minas Manthos</vendor>
-    <!-- 129.161 -> 12.1 -->
-    <idea-version since-build="129.161"/>
+    <!-- 129 -> 12.1 -->
+    <idea-version since-build="129"/>
     <depends>com.intellij.modules.lang</depends>
     <change-notes><![CDATA[See <a href="https://github.com/minman/altn8/wiki/Change-Notes">change notes</a>.]]></change-notes>
 
