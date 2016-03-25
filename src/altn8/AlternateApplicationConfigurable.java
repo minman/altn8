@@ -16,41 +16,18 @@
 package altn8;
 
 import altn8.ui.AlternateConfigurationPanel;
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-@State(name = "AlternateApplicationComponent", storages = {@Storage(id = "altn8", file = "$APP_CONFIG$/altn8.xml")})
-public class AlternateApplicationComponent implements ApplicationComponent, Configurable, PersistentStateComponent<AlternateConfiguration> {
+public class AlternateApplicationConfigurable implements Configurable {
     private AlternateConfigurationPanel dataInterface;
-    private AlternateConfiguration alternateConfiguration = new AlternateConfiguration();
 
-    private static final String COMPONENTNAME = "AlternateApplicationComponent";
     private static final String DISPLAYNAME = "AltN8";
-
-    public void initComponent() {
-    }
-
-    public void disposeComponent() {
-    }
-
-    public String getComponentName() {
-        return COMPONENTNAME;
-    }
 
     public String getDisplayName() {
         return DISPLAYNAME;
-    }
-
-    public Icon getIcon() {
-        return null;
     }
 
     public String getHelpTopic() {
@@ -65,31 +42,22 @@ public class AlternateApplicationComponent implements ApplicationComponent, Conf
     }
 
     public boolean isModified() {
-        return dataInterface != null && dataInterface.isModified(alternateConfiguration);
+        return dataInterface != null && dataInterface.isModified(AlternateConfiguration.getInstance());
     }
 
     public void apply() throws ConfigurationException {
         if (dataInterface != null) {
-            dataInterface.pushDataTo(alternateConfiguration);
+            dataInterface.pushDataTo(AlternateConfiguration.getInstance());
         }
     }
 
     public void reset() {
         if (dataInterface != null) {
-            dataInterface.pullDataFrom(alternateConfiguration);
+            dataInterface.pullDataFrom(AlternateConfiguration.getInstance());
         }
     }
 
     public void disposeUIResources() {
         dataInterface = null;
-    }
-
-    @NotNull
-    public AlternateConfiguration getState() {
-        return alternateConfiguration;
-    }
-
-    public void loadState(AlternateConfiguration state) {
-        XmlSerializerUtil.copyBean(state, alternateConfiguration);
     }
 }

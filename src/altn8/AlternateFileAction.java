@@ -25,7 +25,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -91,7 +90,7 @@ public class AlternateFileAction extends AnAction {
      * If we found at minimunm one file in module, only module-files are listet. Else project files.
      */
     private List<AlternateFileGroup> findFiles(final VirtualFile currentFile, final Project project, final Module module) {
-        AlternateConfiguration configuration = ApplicationManager.getApplication().getComponent(AlternateApplicationComponent.class).getState();
+        AlternateConfiguration configuration = AlternateConfiguration.getInstance();
 
         final Map<String, AlternateFileGroup> projectWorkMap = new HashMap<String, AlternateFileGroup>();
         final Map<String, AlternateFileGroup> moduleWorkMap = new HashMap<String, AlternateFileGroup>();

@@ -15,7 +15,13 @@
  */
 package altn8;
 
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +29,8 @@ import java.util.List;
 /**
  *
  */
-public class AlternateConfiguration {
+@State(name = "AlternateApplicationComponent", storages = {@Storage(id = "altn8", file = "$APP_CONFIG$/altn8.xml")})
+public class AlternateConfiguration implements PersistentStateComponent<AlternateConfiguration> {
     // general
     public boolean onlyFromModule;
     // freeRegex
@@ -38,6 +45,10 @@ public class AlternateConfiguration {
     @AbstractCollection(surroundWithTag = false, elementTypes = AlternateGenericPrefixPostfixRegexItem.class)
     public List<AlternateGenericPrefixPostfixRegexItem> genericPostfixRegexItems;
 
+    public static AlternateConfiguration getInstance() {
+        return ServiceManager.getService(AlternateConfiguration.class);
+    }
+
     public AlternateConfiguration() {
         // genericRegex
         genericRegexActive = true;
@@ -51,6 +62,15 @@ public class AlternateConfiguration {
         freeRegexItems = new ArrayList<AlternateFreeRegexItem>();
         // -> fill defaults
         addDefaultFreeRegexItems();
+    }
+
+    @Nullable
+    public AlternateConfiguration getState() {
+        return this;
+    }
+
+    public void loadState(AlternateConfiguration state) {
+        XmlSerializerUtil.copyBean(state, this);
     }
 
     /**

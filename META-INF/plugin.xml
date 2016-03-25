@@ -1,4 +1,3 @@
-<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin>
     <id>Alt n 8</id> <!--unique identifier of the plugin, dont change-->
     <name>AltN8</name>
@@ -18,11 +17,10 @@
     <depends>com.intellij.modules.lang</depends>
     <change-notes><![CDATA[See <a href="https://github.com/minman/altn8/wiki/Change-Notes">change notes</a>.]]></change-notes>
 
-    <application-components>
-        <component>
-            <implementation-class>altn8.AlternateApplicationComponent</implementation-class>
-        </component>
-    </application-components>
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="altn8.AlternateConfiguration"/>
+        <applicationConfigurable instance="altn8.AlternateApplicationConfigurable"/>
+    </extensions>
 
     <actions>
         <action id="alternate_file" class="altn8.AlternateFileAction"
